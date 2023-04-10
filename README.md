@@ -1,7 +1,9 @@
 ## This is a repository of the stuff i've made to my Minecraft portfolio.
 ---
 
-To download the packs, click on the download link shown in the readme.md and download the .mcpack, not the source files.
+To download the packs, click on the download link shown in the readme.md and download the .mcpack, not the source files. <br><br>
+Packs are made by me, `GreenJuzzy#3436` <br>
+Need help? Join [Build a Realm](https://discord.gg/buildarealm)!<br>
 
 📦 | Content
 
