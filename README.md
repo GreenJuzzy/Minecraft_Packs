@@ -11,4 +11,5 @@ Need help? Join [Build a Realm](https://discord.gg/buildarealm)!<br>
 [Inventory See](https://github.com/GreenJuzzy/Minecraft_Packs/tree/main/Packs/Inventory%20See) <br>
 [TPA System](https://github.com/GreenJuzzy/Minecraft_Packs/tree/main/Packs/TPA%20System)
 
-[Parse Coordinates](https://github.com/GreenJuzzy/Minecraft_Packs/tree/main/Scripts/Parse%20Coordinates)
+[Parse Coordinates](https://github.com/GreenJuzzy/Minecraft_Packs/tree/main/Scripts/Parse%20Coordinates) <br>
+[Password Protected OP](https://github.com/GreenJuzzy/Minecraft_Packs/tree/main/Scripts/Password%20Protected%20OP)
