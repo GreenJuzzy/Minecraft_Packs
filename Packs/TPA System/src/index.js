@@ -16,13 +16,21 @@ var command_descriptions = {
     "tpahelp": "List and descriptions of commands"
 }
 
+function tpSound(player) {
+    system.run(() => {
+
+        player.playSound("note.pling", { pitch: 2 })
+
+    })
+}
+
 function getPlayer(name) {
     var players = [...world.getPlayers()]
 
     return players.find(p => p.name === name) || players.filter(p => p.name.toLowerCase().startsWith(name.toLowerCase()))[0]
 }
 
-world.events.beforeChat.subscribe((data) => {
+world.beforeEvents.chatSend.subscribe((data) => {
 
     var sender = data.sender
 
@@ -47,7 +55,7 @@ world.events.beforeChat.subscribe((data) => {
         if (tpCooldown.get(sender.name) > new Date().getTime()) return sender.sendMessage(`${config.suffix} §fPlease wait ${Math.round((tpCooldown.get(sender.name) - new Date().getTime()) / 1000)}s before sending another request.`);
         if (target.name == sender.name) return sender.sendMessage(`${config.suffix} You can't teleport to yourself!`)
 
-        if (config.plingSound) target.playSound("note.pling", { pitch: 2 })
+        if (config.plingSound) tpSound(target)
 
         target.sendMessage(`${config.suffix} §fYou have an incoming request from §b${sender.name}§f!`)
         sender.sendMessage(`${config.suffix} §fTeleport request sent to §b${target.name}§f.`)
@@ -74,7 +82,7 @@ world.events.beforeChat.subscribe((data) => {
         if (tpCooldown.get(sender.name) > new Date().getTime()) return sender.sendMessage(`${config.suffix} §fPlease wait ${Math.round((tpCooldown.get(sender.name) - new Date().getTime()) / 1000)}s before sending another request.`);
         if (target.name == sender.name) return sender.sendMessage(`${config.suffix} You can't teleport to yourself!`)
 
-        if (config.plingSound) target.playSound("note.pling", { pitch: 2 })
+        if (config.plingSound) tpSound(target)
 
         target.sendMessage(`${config.suffix} §fYou have an incoming request from §b${sender.name}§f!`)
         sender.sendMessage(`${config.suffix} §fTeleport request sent to §b${target.name}§f.`)
@@ -104,12 +112,12 @@ world.events.beforeChat.subscribe((data) => {
 
 
 
-        if (config.plingSound) tpTo.playSound("note.pling", { pitch: 2 })
-        if (config.plingSound) sender.playSound("note.pling", { pitch: 2 })
+        if (config.plingSound) tpSound(tpTo)
+        if (config.plingSound) tpSound(sender)
         tpMap.delete(tpTo.name)
         system.runTimeout(() => {
 
-            tpTo.teleport(sender.location, sender.dimension, sender.getRotation().x, sender.getRotation().y)
+            tpTo.tryTeleport(sender.location, { dimension: sender.dimension, keepVelocity: false })
 
         }, 10)
 
@@ -155,14 +163,16 @@ world.events.beforeChat.subscribe((data) => {
 
     } else if (command == "tpatoggle") {
         data.cancel = true
+        system.run(() => {
+            if (sender.hasTag(config.tpaDisabledTag)) {
+                sender.sendMessage(`${config.suffix} §fYou will now recieve incoming requests.`)
+                sender.removeTag(config.tpaDisabledTag)
+            } else {
+                sender.sendMessage(`${config.suffix} §fYou will no longer recieve incoming requests.`)
+                sender.addTag(config.tpaDisabledTag)
+            }
+        })
 
-        if (sender.hasTag(config.tpaDisabledTag)) {
-            sender.sendMessage(`${config.suffix} §fYou will now recieve incoming requests.`)
-            sender.removeTag(config.tpaDisabledTag)
-        } else {
-            sender.sendMessage(`${config.suffix} §fYou will no longer recieve incoming requests.`)
-            sender.addTag(config.tpaDisabledTag)
-        }
 
     } else if (command == "tpall") {
         data.cancel = true
@@ -182,4 +192,8 @@ world.events.beforeChat.subscribe((data) => {
 
 
     }
+})
+
+world.afterEvents.playerLeave.subscribe((e) => {
+    tpMap.delete(e.playerName)
 })
